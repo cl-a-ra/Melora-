@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111318">
+    <meta name="description" content="A local-first workspace for arranging playlists and tracks.">
+    <title>PlayList Arranger</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to workspace</a>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="PlayList Arranger home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" focusable="false">
+            <path d="M6 9h17M6 16h13M6 23h9" />
+            <path d="m22 17 5 5-5 5" />
+          </svg>
+        </span>
+        <span>PlayList <strong>Arranger</strong></span>
+      </a>
+      <div class="header-actions">
+        <span class="local-badge"><span aria-hidden="true"></span> This device only</span>
+        <button id="open-options" class="options-button" type="button" aria-haspopup="dialog" aria-controls="options-dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" />
+            <path d="m19.4 13.5 1.1.9-1.5 2.6-1.4-.5a7.8 7.8 0 0 1-1.4.8l-.2 1.5h-3l-.3-1.5a7.8 7.8 0 0 1-1.4-.8l-1.4.5-1.5-2.6 1.1-.9a7 7 0 0 1 0-1.6l-1.1-.9 1.5-2.6 1.4.5a7.8 7.8 0 0 1 1.4-.8l.3-1.5h3l.2 1.5a7.8 7.8 0 0 1 1.4.8l1.4-.5 1.5 2.6-1.1.9a7 7 0 0 1 0 1.6Z" />
+          </svg>
+          <span>Options</span>
+        </button>
+      </div>
+    </header>
+
+    <dialog id="options-dialog" class="options-dialog" aria-labelledby="options-title" aria-describedby="options-status">
+      <div class="options-card">
+        <div class="options-heading">
+          <div>
+            <p class="eyebrow">MAKE IT YOURS</p>
+            <h2 id="options-title">Appearance options</h2>
+            <p class="options-description">Choose a look that feels right for your workspace.</p>
+          </div>
+          <button id="close-options" class="dialog-close" type="button" aria-label="Close appearance options">×</button>
+        </div>
+        <div class="options-fields">
+          <div class="option-field">
+            <label for="color-mode">Color mode</label>
+            <select id="color-mode" name="color-mode">
+              <option value="system">Use device setting</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+            <p>System mode follows your device’s appearance preference.</p>
+          </div>
+          <div class="option-field">
+            <label for="color-theme">Color theme</label>
+            <select id="color-theme" name="color-theme">
+              <option value="forest">Forest</option>
+              <option value="ocean">Ocean</option>
+              <option value="berry">Berry</option>
+              <option value="sunset">Sunset</option>
+            </select>
+            <p>Sets the accent and keyboard focus colors.</p>
+          </div>
+          <div class="option-field">
+            <label for="font-choice">Font</label>
+            <select id="font-choice" name="font-choice">
+              <option value="system">System</option>
+              <option value="serif">Serif</option>
+              <option value="mono">Monospace</option>
+            </select>
+            <p>Uses fonts already installed on this device.</p>
+          </div>
+        </div>
+        <p id="options-status" class="options-status" role="status" aria-live="polite">
+          Preferences save only in this browser profile. No remote fonts or services are used.
+        </p>
+      </div>
+    </dialog>
+
+    <main id="main-content" class="workspace">
+      <section class="demo-banner" aria-labelledby="demo-title">
+        <span class="demo-icon" aria-hidden="true">!</span>
+        <div>
+          <h1 id="demo-title">Demo-only shell</h1>
+          <p>No Spotify connection, account data, API calls, or Spotify changes. Arranger folders and order will be stored only in this browser profile.</p>
+        </div>
+      </section>
+
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">YOUR LIBRARY, YOUR WAY</p>
+          <h2>Arrange your playlists</h2>
+          <p class="page-description">Group playlists into your own virtual folders, then set the order that feels right.</p>
+        </div>
+        <span class="prototype-label">LOCAL PROTOTYPE</span>
+      </div>
+
+      <p id="app-notice" class="app-notice" role="status" aria-live="polite">Demo mode is on. Nothing is connected or synced.</p>
+
+      <div class="workspace-grid">
+        <aside class="sidebar panel" aria-label="Playlist library controls">
+          <section class="folder-section" aria-labelledby="folders-heading">
+            <div class="section-heading">
+              <h2 id="folders-heading">Your folders</h2>
+              <span class="section-count" aria-label="No folders yet">0</span>
+            </div>
+            <form id="folder-form" class="folder-form">
+              <label for="folder-name">Create a virtual folder</label>
+              <div class="form-row">
+                <input id="folder-name" name="folder-name" type="text" maxlength="60" placeholder="e.g. Focus time" autocomplete="off">
+                <button class="icon-button add-button" type="submit" aria-label="Create folder" title="Create folder">+</button>
+              </div>
+              <p class="field-hint">Only visible in this browser profile.</p>
+            </form>
+            <ul id="folder-list" class="folder-list" aria-label="Virtual folders">
+              <li class="empty-state">Your folders will appear here.</li>
+            </ul>
+          </section>
+
+          <section class="library-section" aria-labelledby="playlists-heading">
+            <div class="section-heading">
+              <h2 id="playlists-heading">Playlists</h2>
+              <span class="section-count" aria-label="No playlists loaded">0</span>
+            </div>
+            <label class="select-label" for="active-folder">Show playlists in</label>
+            <select id="active-folder" name="active-folder">
+              <option value="all">All playlists</option>
+            </select>
+            <ul id="playlist-list" class="playlist-list" aria-label="Playlists">
+              <li class="empty-state playlist-empty">No playlists loaded in this demo shell.</li>
+            </ul>
+          </section>
+        </aside>
+
+        <section class="main-panel panel" aria-label="Playlist arrangement workspace">
+          <section class="playlist-detail" aria-labelledby="selected-playlist-name">
+            <div class="detail-heading">
+              <div class="playlist-art" aria-hidden="true">
+                <svg viewBox="0 0 48 48" focusable="false">
+                  <path d="M11 14h26M11 22h26M11 30h17" />
+                  <circle cx="35" cy="34" r="5" />
+                </svg>
+              </div>
+              <div class="detail-copy">
+                <p class="eyebrow">SELECTED PLAYLIST</p>
+                <h2 id="selected-playlist-name">Choose a playlist</h2>
+                <p id="selected-playlist-description">Choose a fictional sample playlist to see its tracks.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="tracks-section" aria-labelledby="tracks-heading">
+            <div class="section-heading tracks-heading">
+              <div>
+                <p class="eyebrow">TRACK ORDER</p>
+                <h2 id="tracks-heading">Tracks</h2>
+              </div>
+              <span class="order-hint">Arrange within this playlist</span>
+            </div>
+            <ul id="track-list" class="track-list" aria-label="Tracks in selected playlist">
+              <li class="empty-state track-empty">Choose a playlist to see its tracks.</li>
+            </ul>
+          </section>
+
+          <section id="track-preview" class="preview-panel" aria-labelledby="preview-heading">
+            <div class="preview-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 7h16M4 12h11M4 17h7" />
+                <path d="m16 15 4 4 4-4" />
+              </svg>
+            </div>
+            <div class="preview-copy">
+              <h2 id="preview-heading">Order preview</h2>
+              <p>Any proposed track reorder will be shown here before you confirm it.</p>
+            </div>
+            <button id="commit-track-order" class="primary-button" type="button">Confirm track order</button>
+          </section>
+          <p class="scope-note">This preview and confirmation area is for the Arranger prototype. It does not write to Spotify.</p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>PlayList Arranger</span>
+      <span>Local-first · No account connected</span>
+    </footer>
+  </body>
+</html>
